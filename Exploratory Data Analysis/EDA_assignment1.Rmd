@@ -1,0 +1,72 @@
+---
+title: "Exploratory Data Analysis Assignment 1"
+author: "submitted by Vinay vernekar vrvernek@iu.edu"
+date: "January 16, 2017"
+output: pdf_document
+---
+
+```{r echo=FALSE}
+library(ggplot2)
+library(lattice)
+
+setwd("C:\\dataset\\")
+
+Tipdata<-read.table(file="tips.txt",header = TRUE)
+
+#head(Tipdata,5)
+
+Tipdata$tip_P<-(Tipdata$tip/Tipdata$total_bill)*100
+
+
+```
+
+__Q1.__ Does the percentage tipped follow a normal distribution? If not, how does the data differ from a normal distribution? Include ONE graph drawn with ggplot to support your answer.  
+
+```{r echo=FALSE}
+# Plotting QQ-Norm plot
+ggplot(Tipdata, aes(sample=tip_P)) +stat_qq() +ggtitle("QQ Plot to check for Distribution") # fat tails observed
+#ggplot(Tipdata, aes(x=tip_P)) + stat_ecdf()
+ggplot(Tipdata, aes(sample=tip_P)) +stat_qq(distribution = qunif) # we notice curveture in the plot
+#ggplot(Tipdata, aes(sample=tip_P)) +stat_qq(distribution = qunif)
+#ggplot(Tipdata, aes(x=tip_P)) + geom_density()
+```
+__Observations:__
+
+1) The data appears to be normally distributed, however the extreme value do appear to follow normal distribution.  
+2) But when using uniform distribution it can be noted for a given of quantiles it follows an uniform distribution.    
+
+__Q2.__ How does the distribution of tips change with party size? Include ONE plot to support your answer. (A set of faceted plots counts as one plot.)
+
+```{r echo=FALSE}
+ggplot(Tipdata, aes(sample = tip_P)) +stat_qq() +facet_wrap(~size, ncol=3)+ ggtitle("Tip Percent distribution for different size(attribute)")
+#summary(as.factor(Tipdata$size))
+```
+
+__Observations:__  
+
+1) We can notice that there are less points for size 1,5 and 6 and hence difficult to conclude that they are normally distributed. This also indicates that single and very big group sizes are rare.     
+2) To a greater extent the distribution of tip percentage for size of 2,3 and 4 appear normal. But we can see that are still some observations that do not appear normally distributed and seem to be above or below the QQ line, these are outliers.  
+
+
+__Q3.__ Using lm(), we can find that a linear model to predict percentage tipped from party size is
+Percent tipped = 18.4 - 0.92 * size
+Does it look like the model fits the data well? Include ONE plot of the residuals of this model to support your answer. (Again, a set of faceted plots counts as one plot.)	
+
+```{r echo=FALSE}
+percent_tippedlm = lm(tip_P ~ size, data=Tipdata)
+
+tip_model_data=data.frame(Tipdata$total_bill,Tipdata$size,resi=residuals(percent_tippedlm))
+#head(tip_model_data)
+
+# plotting the data
+ggplot(tip_model_data, aes(sample = resi)) +stat_qq()+ facet_wrap(~Tipdata.size, ncol=3)+ggtitle("Residual Plot Examination")
+```
+__Observations:__
+
+1) Since there are a few data points for size 1,5,6 its hard to say that are really normally distributed.  
+
+2) However the plots for the other size like 2,3 and 4 appear to be normally distributed with certain exemptions to extreme values or observations  
+
+
+
+
