@@ -1,6 +1,6 @@
 ---
 title: "Exploratory Data Analysis Assignment 1"
-author: "submitted by Vinay vernekar vrvernek@iu.edu"
+author: "submitted by Vinay vernekar 
 date: "January 16, 2017"
 output: pdf_document
 ---
